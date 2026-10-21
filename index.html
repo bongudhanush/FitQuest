@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitQuest – Your Fitness Adventure</title>
+  <meta name="description" content="Gamify your fitness journey with daily missions, XP rewards, leveling up, and achievement badges.">
+  <!-- Google Fonts for sleek, modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Ambient Glow Effects -->
+  <div class="ambient-glow glow-top-left"></div>
+  <div class="ambient-glow glow-bottom-right"></div>
+
+  <main class="auth-page" id="authScreen">
+    <section class="auth-card" aria-labelledby="authHeading">
+      <a class="auth-brand" href="#" aria-label="FitQuest home">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Fit<span class="highlight">Quest</span></span>
+      </a>
+
+      <div class="auth-intro">
+        <span class="greeting-badge">YOUR FITNESS ADVENTURE</span>
+        <h1 id="authHeading">Make every day <span class="highlight">count.</span></h1>
+        <p>Sign in to continue your journey, or create an account to get started.</p>
+      </div>
+
+      <div class="auth-tabs" role="group" aria-label="Choose sign-in or sign-up">
+        <button class="auth-tab active" id="showSignIn" type="button" aria-pressed="true">Sign in</button>
+        <button class="auth-tab" id="showSignUp" type="button" aria-pressed="false">Create account</button>
+      </div>
+
+      <div class="auth-form" id="signInForm" role="form" aria-label="Sign in">
+        <label for="signInEmail">Email address</label>
+        <input id="signInEmail" name="email" type="email" autocomplete="username" placeholder="you@example.com" required>
+
+        <label for="signInPassword">Password</label>
+        <div class="password-input-wrap">
+          <input id="signInPassword" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+          <button class="password-toggle" type="button" data-password-toggle="signInPassword" aria-label="Show password">Show</button>
+        </div>
+
+        <button class="btn-primary auth-submit" id="signInSubmit" type="button">Sign in</button>
+      </div>
+
+      <div class="auth-form" id="signUpForm" role="form" aria-label="Create account" hidden>
+        <label for="signUpEmail">Email address</label>
+        <input id="signUpEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+
+        <label for="signUpPassword">Create a password</label>
+        <div class="password-input-wrap">
+          <input id="signUpPassword" name="password" type="password" autocomplete="new-password" placeholder="At least 12 characters" minlength="12" required>
+          <button class="password-toggle" type="button" data-password-toggle="signUpPassword" aria-label="Show password">Show</button>
+        </div>
+        <p class="password-hint">Use at least 12 characters. A long, unique passphrase is easier to remember and harder to guess.</p>
+
+        <button class="btn-primary auth-submit" id="signUpSubmit" type="button">Create account</button>
+      </div>
+
+      <p class="auth-status" id="authStatus" role="status" aria-live="polite"></p>
+      <p class="auth-security-note">When configured, passwords are sent securely to Supabase Auth. FitQuest does not store your password.</p>
+      <button class="auth-guest-btn" id="continueAsGuest" type="button">Continue as guest</button>
+    </section>
+  </main>
+
+  <!-- Mobile Top Navigation Bar -->
+  <header class="mobile-header" id="mobileHeader" hidden>
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">Fit<span class="highlight">Quest</span></span>
+    </div>
+    <div class="mobile-stats-pill">
+      <span class="pill-label">LVL <strong id="mobile-level-display">1</strong></span>
+      <span class="pill-divider">•</span>
+      <span class="pill-xp"><strong id="mobile-xp-display">0</strong> XP</span>
+    </div>
+    <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle navigation menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+  <!-- Application Layout -->
+  <div class="app-layout" id="appLayout" hidden>
+    
+    <!-- Left Navigation Sidebar (Desktop & Tablet Drawer) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">Fit<span class="highlight">Quest</span></span>
+        </div>
+        <p class="tagline">Fitness Adventure RPG</p>
+      </div>
+
+      <!-- User Mini Profile Card -->
+      <div class="user-profile-card">
+        <div class="avatar-ring">
+          <div class="avatar">🏃‍♂️</div>
+          <span class="rank-badge" id="profile-rank-badge">Lvl 1</span>
+        </div>
+        <div class="profile-info">
+          <h3 class="profile-name">Fit Explorer</h3>
+          <p class="profile-title" id="player-title">Novice Challenger</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="#dashboard" class="nav-link active">
+              <span class="nav-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#missions" class="nav-link">
+              <span class="nav-icon">🎯</span>
+              <span>Daily Missions</span>
+            </a>
+          </li>
+          <li>
+            <a href="#workouts" class="nav-link">
+              <span class="nav-icon">🏋️</span>
+              <span>Workout Explorer</span>
+            </a>
+          </li>
+          <li>
+            <a href="#achievements" class="nav-link">
+              <span class="nav-icon">🏆</span>
+              <span>Achievements</span>
+            </a>
+          </li>
+          <li>
+            <a href="#progress" class="nav-link">
+              <span class="nav-icon">📈</span>
+              <span>Weekly Progress</span>
+            </a>
+          </li>
+          <li>
+            <a href="#tip-section" class="nav-link">
+              <span class="nav-icon">💡</span>
+              <span>Daily Coach Tip</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Quick Reset / Demo Controls in Sidebar -->
+      <div class="sidebar-footer">
+        <button id="resetDataBtn" class="btn-ghost" title="Reset all progress to demo state">
+          <span class="btn-icon">🔄</span> Reset Demo Data
+        </button>
+        <button id="signOutBtn" class="btn-ghost" type="button" hidden>
+          <span class="btn-icon">↩</span> Sign out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content" tabindex="-1">
+
+      <!-- Section: Home Dashboard -->
+      <section id="dashboard" class="content-section">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-text">
+            <div class="greeting-badge">READY FOR ADVENTURE</div>
+            <h1 class="hero-title">Your next level <span class="highlight">starts today.</span></h1>
+            <p class="hero-subtitle">Transform daily movement into power. Complete your daily quests, earn XP points, and level up your body and mind.</p>
+          </div>
+          <div class="hero-badge-preview">
+            <div class="hero-streak-box">
+              <span class="flame-icon">🔥</span>
+              <div>
+                <span class="streak-count" id="streak-counter">3</span>
+                <span class="streak-label">Day Streak</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Player Level & XP Stats Card -->
+        <div class="player-status-card">
+          <div class="level-indicator">
+            <div class="level-circle">
+              <span class="level-prefix">LVL</span>
+              <span class="level-number" id="dashboard-level">1</span>
+            </div>
+            <div class="level-details">
+              <div class="level-header-row">
+                <h2 class="level-name" id="level-tier-name">Bronze Recruit</h2>
+                <span class="xp-ratio" id="xp-ratio-text">0 / 100 XP</span>
+              </div>
+              <!-- Level Progress Bar -->
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill xp-bar-fill" id="xp-bar" style="width: 0%;"></div>
+              </div>
+              <div class="xp-sub-info">
+                <span id="xp-remaining-text">100 XP until Level 2</span>
+                <span class="total-xp-counter">Total XP: <strong id="total-xp-display">0</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Column Quick Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-icon green-glow">🎯</div>
+            <div class="metric-content">
+              <span class="metric-label">Quests Completed</span>
+              <div class="metric-value-wrap">
+                <span class="metric-number" id="completed-count">0</span>
+                <span class="metric-total">/ 4 Today</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon blue-glow">⚡</div>
+            <div class="metric-content">
+              <span class="metric-label">Daily Completion</span>
+              <div class="metric-value-wrap">
+                <span class="metric-number" id="daily-percentage">0%</span>
+                <span class="metric-total">Complete</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-icon gold-glow">🏅</div>
+            <div class="metric-content">
+              <span class="metric-label">Badges Unlocked</span>
+              <div class="metric-value-wrap">
+                <span class="metric-number" id="unlocked-badges-count">0</span>
+                <span class="metric-total">/ 4 Earned</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Goal Tracker Bar -->
+        <div class="daily-tracker-card">
+          <div class="tracker-header">
+            <div>
+              <h3 class="card-title">Daily Mission Completion</h3>
+              <p class="card-subtitle">Finish all 4 fitness missions to max out today's score and claim the Mission Master badge.</p>
+            </div>
+            <span class="completion-pill" id="completion-status-pill">In Progress</span>
+          </div>
+          <div class="progress-bar-container large">
+            <div class="progress-bar-fill daily-bar-fill" id="daily-missions-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Section: Daily Fitness Missions -->
+      <section id="missions" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><span class="icon">🎯</span> Daily Fitness Missions</h2>
+            <p class="section-subtitle">Earn XP by finishing your physical habits. Each mission can be completed once per day.</p>
+          </div>
+        </div>
+
+        <div class="missions-grid" id="missionsGrid">
+          <!-- Missions rendered dynamically via JavaScript & fallback HTML -->
+        </div>
+      </section>
+
+      <!-- Section: Workout Explorer -->
+      <section id="workouts" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><span class="icon">🏋️</span> Workout Explorer</h2>
+            <p class="section-subtitle">Choose an adventure tailored to your fitness level and schedule.</p>
+          </div>
+          <!-- Filter Tabs -->
+          <div class="filter-tabs" id="workoutFilters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="beginner">Beginner</button>
+            <button class="filter-btn" data-filter="strength">Strength</button>
+            <button class="filter-btn" data-filter="cardio">Cardio</button>
+          </div>
+        </div>
+
+        <div class="workout-cards-grid" id="workoutGrid">
+          <!-- Workouts rendered dynamically by script.js -->
+        </div>
+      </section>
+
+      <!-- Section: Level & Achievements -->
+      <section id="achievements" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><span class="icon">🏆</span> Badges & Achievements</h2>
+            <p class="section-subtitle">Unlock trophies and bragging rights as you conquer your daily workouts.</p>
+          </div>
+        </div>
+
+        <div class="achievements-grid" id="achievementsGrid">
+          <!-- Achievement badges rendered dynamically by script.js -->
+        </div>
+      </section>
+
+      <!-- Section: Weekly Progress Chart -->
+      <section id="progress" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><span class="icon">📈</span> Weekly Activity Progress</h2>
+            <p class="section-subtitle">Missions completed across the week. Consistency builds champions!</p>
+          </div>
+          <div class="chart-legend">
+            <span class="legend-dot"></span>
+            <span class="legend-text">Missions Completed</span>
+          </div>
+        </div>
+
+        <div class="chart-container-card">
+          <div class="css-chart-wrapper" id="weeklyChart">
+            <!-- Weekly bars rendered dynamically by script.js -->
+          </div>
+          <div class="chart-summary-footer">
+            <div class="chart-stat">
+              <span class="stat-label">Weekly Total</span>
+              <span class="stat-value" id="weekly-total-missions">0 Missions</span>
+            </div>
+            <div class="chart-stat">
+              <span class="stat-label">Best Day</span>
+              <span class="stat-value" id="weekly-best-day">Today</span>
+            </div>
+            <div class="chart-stat">
+              <span class="stat-label">Consistency Score</span>
+              <span class="stat-value highlight" id="weekly-consistency">Building</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Fitness Tip Generator -->
+      <section id="tip-section" class="content-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title"><span class="icon">💡</span> Daily Coach Tip</h2>
+            <p class="section-subtitle">Science-backed fitness, recovery, and mindset tips to elevate your journey.</p>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-inner">
+            <div class="tip-header-row">
+              <span class="tip-category-pill" id="tip-category">Recovery</span>
+              <span class="tip-number-label">Daily Wisdom</span>
+            </div>
+            <blockquote class="tip-quote" id="tip-text">
+              "Consistency beats intensity every single time. Small daily actions create massive lifetime transformations."
+            </blockquote>
+            <div class="tip-author-row">
+              <div class="tip-coach-info">
+                <span class="coach-avatar">🧠</span>
+                <div>
+                  <h4 class="coach-name">FitQuest Coach AI</h4>
+                  <p class="coach-role">Daily Performance Science</p>
+                </div>
+              </div>
+              <button class="btn-primary" id="newTipBtn">
+                <span class="btn-icon">⚡</span> Get New Tip
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- App Footer -->
+      <footer class="app-footer">
+        <div class="footer-content">
+          <p class="footer-title"><strong>FitQuest</strong> – Your Fitness Adventure</p>
+          <p class="footer-desc">Crafted with modern HTML5, CSS3 Grid/Flexbox, and vanilla JavaScript. No external frameworks used.</p>
+          <p class="footer-copyright">© FitQuest Application • Built for Portfolios & Technical Interviews</p>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Interactive Workout Details Modal -->
+  <div class="modal-backdrop" id="workoutModal" aria-hidden="true" role="dialog">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close dialog">&times;</button>
+      <div class="modal-header">
+        <span class="modal-tag" id="modalCategory">Category</span>
+        <h2 class="modal-title" id="modalTitle">Workout Title</h2>
+        <div class="modal-meta-row">
+          <span class="meta-item"><span class="meta-icon">⏱️</span> <span id="modalDuration">15 Mins</span></span>
+          <span class="meta-item"><span class="meta-icon">🔥</span> <span id="modalCalories">120 kcal</span></span>
+          <span class="meta-item"><span class="meta-icon">⭐</span> <span id="modalDifficulty">Beginner</span></span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description" id="modalDescription">Detailed workout overview and explanation.</p>
+        
+        <h4 class="modal-subheading">Exercise Breakdown</h4>
+        <ul class="exercise-steps-list" id="modalStepsList">
+          <!-- Step items rendered dynamically -->
+        </ul>
+
+        <div class="modal-pro-tip">
+          <span class="pro-tip-icon">💡</span>
+          <div>
+            <strong>Form Tip:</strong>
+            <p id="modalFormTip">Keep your core engaged throughout each movement and control the descent.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary full-width" id="modalStartBtn">Mark Workout Completed (+50 XP)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Popups for XP and Achievements -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Custom JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
